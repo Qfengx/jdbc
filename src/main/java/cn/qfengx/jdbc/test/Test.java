@@ -11,7 +11,7 @@ public class Test {
 		List<Student> list = JdbcUtil.query(sql, new BeanHandler<Student>(Student.class));
 		System.out.println(list.size());
 		for (Student student : list) {
-			System.out.println(student);
+			System.out.println(student); 
 		}
 	}
 }
