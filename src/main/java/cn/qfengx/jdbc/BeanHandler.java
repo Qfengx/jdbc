@@ -37,7 +37,7 @@ public class BeanHandler<T> {
 						field.setAccessible(true);
 						field.set(t, entry.getValue());
 					} catch (NoSuchFieldException e) {
-						System.out.println("实体类中没有" + name + "属性");
+						System.out.println(t.getClass() + "实体类中没有" + name + "属性");
 						continue;
 					}
 				}
