@@ -3,9 +3,6 @@
   <groupId>cn.qfengx</groupId>
   <artifactId>jdbc</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  
-  
-  
   <build>
     <plugins>
   	  <!-- 设置编译版本为1.8 -->

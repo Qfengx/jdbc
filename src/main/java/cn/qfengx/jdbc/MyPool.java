@@ -10,26 +10,36 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
 public class MyPool implements DataSource {
 	private static List<Connection> pool = new LinkedList<Connection>();
-	private static String prefix = "";
-	private static int initNum = 5;
-	private static String driver = "com.mysql.jdbc.Driver";
-	private static String url = "";
-	private static String username = "";
-	private static String passwd = "";
+	private static String prefix = "";//""
+	private static int initNum = 5;//5
+	private static String driver = "com.mysql.jdbc.Driver";//com.mysql.jdbc.Driver
+	private static String url = "";//""
+	private static String username = "root";//root
+	private static String password = "";//""
 	
 	static {
 		try {
-			prefix = "";
+			//加载配置文件
+			Properties prop = new Properties();
+			prop.load(MyPool.class.getResourceAsStream("/jdbcConfig.properties"));
+			prefix = prop.getProperty("jdbc.db.prefix").equals("null") ? "" : prop.getProperty("jdbc.db.prefix");
+			initNum = prop.getProperty("jdbc.pool.initNum").equals("null") ? 5 : Integer.parseInt(prop.getProperty("jdbc.pool.initNum"));
+			driver = prop.getProperty("jdbc.driver").equals("null") ? "com.mysql.jdbc.Driver" : prop.getProperty("jdbc.driver");
+			url = prop.getProperty("jdbc.url");
+			username = prop.getProperty("jdbc.username").equals("null") ? "root" : prop.getProperty("jdbc.username");
+			password = prop.getProperty("jdbc.password").equals("null") ? "" : prop.getProperty("jdbc.password");
+			
 			Class.forName(driver);
 			//初始连接数
 			for (int i = 0; i < initNum; i++) {
-				Connection conn = DriverManager.getConnection(url, username, passwd);
+				Connection conn = DriverManager.getConnection(url, username, password);
 				pool.add(conn);
 			} 
 			System.out.println("pool初始化结束");
@@ -38,7 +48,7 @@ public class MyPool implements DataSource {
 			throw new RuntimeException("连接池初始化错误");
 		}
 	} 
-	
+
 	public String getPrefix() {
 		return prefix;
 	}
@@ -53,7 +63,7 @@ public class MyPool implements DataSource {
 //		return null;
 		if (pool.size() == 0) {//如果连接耗尽
 			for (int i = 0; i < initNum; i++) {
-				pool.add(DriverManager.getConnection(url, username, passwd));
+				pool.add(DriverManager.getConnection(url, username, password));
 			}
 		}
 		final Connection conn = pool.remove(0);//在池中拿走一个连接
