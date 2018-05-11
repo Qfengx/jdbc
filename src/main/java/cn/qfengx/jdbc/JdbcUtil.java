@@ -154,6 +154,13 @@ public class JdbcUtil {
 		}
 	}
 	
+	/**
+	 * 封装成实体类List
+	 * @param sql
+	 * @param bh
+	 * @param objects
+	 * @return
+	 */
 	public static <T> List<T> query(String sql, BeanHandler<T> bh, Object... objects) {
 		return bh.handler(query(sql, objects));
 	}
